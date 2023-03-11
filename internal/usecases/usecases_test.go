@@ -48,3 +48,47 @@ func TestFunctionGetUser(t *testing.T) {
 	})
 
 }
+
+func TestTransferPayment(t *testing.T) {
+	usersTest := []usecases.User{
+		{
+			ID:      "1234",
+			Balance: 1000,
+		},
+		{
+			ID:      "4321",
+			Balance: 50,
+		},
+		{
+			ID:      "0000",
+			Balance: 0,
+		},
+	}
+	mr := mock_test.NewMockRepository(usersTest)
+	uc := usecases.NewUserUsecase(mr)
+	t.Run("if update balance is ok", func(t *testing.T) {
+		uc.TransferPayment("1234", "4321", 200)
+		if usersTest[0].Balance != 900 && usersTest[1].Balance != 250 {
+			t.Errorf("payer have %v want %v", usersTest[0].Balance, 900)
+			t.Errorf("receive have %v want %v", usersTest[1].Balance, 250)
+		}
+	})
+	t.Run("if id empty transfer fail", func(t *testing.T) {
+		err := uc.TransferPayment("", "4321", 50)
+		if err.Error() != "id is empty" {
+			t.Errorf("error have %v want %v", err.Error(), "id is empty")
+		}
+	})
+	t.Run("if id not exists transfer fail", func(t *testing.T) {
+		err := uc.TransferPayment("2020", "4321", 50)
+		if err.Error() != "id not exists" {
+			t.Errorf("error have %v want %v", err.Error(), "id not exists")
+		}
+	})
+	t.Run("if the amount is greater than the balance", func(t *testing.T) {
+		err := uc.TransferPayment("0000", "4321", 50)
+		if err.Error() != "insufficient funds" {
+			t.Errorf("error have %v want %v", err.Error(), "insufficient funds")
+		}
+	})
+}

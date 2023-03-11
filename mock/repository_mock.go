@@ -32,3 +32,16 @@ func (mr *MockRepository) FindUserByID(id string) (*usecases.User, error) {
 	}
 	return user, nil
 }
+
+func (mr *MockRepository) UpdateBalance(id string, amount int64) (err error) {
+	for i, data := range mr.users {
+		if id == data.ID {
+			mr.users[i].Balance = amount
+			break
+		} else {
+			err = errors.New("update balance fail")
+
+		}
+	}
+	return err
+}
