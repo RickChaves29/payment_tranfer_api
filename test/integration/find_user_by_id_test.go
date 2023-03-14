@@ -22,7 +22,7 @@ func init() {
 	db.Exec(`INSERT INTO users (id, balance) VALUES ('1234', 1000)`)
 	db.Exec(`INSERT INTO users (id, balance) VALUES ('4321', 2000)`)
 }
-func TestUserRepository(t *testing.T) {
+func TestFindUserById(t *testing.T) {
 	expect := usecases.User{
 		ID:      "1234",
 		Balance: 1000,
@@ -30,11 +30,9 @@ func TestUserRepository(t *testing.T) {
 	db, _ := data.ConnectionDB("sqlite3", "test.db")
 	r := repositories.NewUserRepository(db)
 	user, _ := r.FindUserByID("1234")
-	t.Run("", func(t *testing.T) {
-		if user.Balance != expect.Balance {
-			t.Errorf("have %v want %v", user.Balance, expect.Balance)
-		}
-	})
+	if user.Balance != expect.Balance {
+		t.Errorf("have %v want %v", user.Balance, expect.Balance)
+	}
 	t.Cleanup(func() {
 		db.Exec(`DROP TABLE users`)
 	})
