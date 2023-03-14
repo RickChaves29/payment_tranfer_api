@@ -25,5 +25,9 @@ func (r *userRepository) FindUserByID(id string) (*usecases.User, error) {
 	return &user, nil
 }
 func (r *userRepository) UpdateBalance(id string, amount int64) error {
+	_, err := r.db.Exec(`UPDATE users SET balance = ? WHERE id = ?`, amount, id)
+	if err != nil {
+		return err
+	}
 	return nil
 }
