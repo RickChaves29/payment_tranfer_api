@@ -16,8 +16,7 @@ func NewUserRepository(db *sql.DB) *userRepository {
 
 func (r *userRepository) FindUserByID(id string) (*usecases.User, error) {
 	user := usecases.User{}
-	defer r.db.Close()
-	row := r.db.QueryRow(`SELECT * FROM users WHERE id = ?`, id)
+	row := r.db.QueryRow(`SELECT * FROM users WHERE id = $1`, id)
 	err := row.Scan(&user.ID, &user.Balance)
 	if err != nil {
 		return nil, err
@@ -25,7 +24,7 @@ func (r *userRepository) FindUserByID(id string) (*usecases.User, error) {
 	return &user, nil
 }
 func (r *userRepository) UpdateBalance(id string, amount int64) error {
-	_, err := r.db.Exec(`UPDATE users SET balance = ? WHERE id = ?`, amount, id)
+	_, err := r.db.Exec(`UPDATE users SET balance = $1 WHERE id = $2`, amount, id)
 	if err != nil {
 		return err
 	}
