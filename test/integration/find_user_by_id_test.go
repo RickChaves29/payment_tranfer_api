@@ -11,9 +11,9 @@ import (
 )
 
 func init() {
-	file, _ := os.Create("test.db")
+	file, _ := os.Create("test_find.db")
 	defer file.Close()
-	db, _ := data.ConnectionDB("sqlite3", "test.db")
+	db, _ := data.ConnectionDB("sqlite3", "test_find.db")
 	defer db.Close()
 	db.Exec(`CREATE TABLE users (
 		id VARCHAR(200) UNIQUE,
@@ -27,7 +27,7 @@ func TestFindUserById(t *testing.T) {
 		ID:      "1234",
 		Balance: 1000,
 	}
-	db, _ := data.ConnectionDB("sqlite3", "test.db")
+	db, _ := data.ConnectionDB("sqlite3", "test_find.db")
 	r := repositories.NewUserRepository(db)
 	user, _ := r.FindUserByID("1234")
 	if user.Balance != expect.Balance {

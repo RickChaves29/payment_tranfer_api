@@ -11,9 +11,9 @@ import (
 )
 
 func init() {
-	file, _ := os.Create("test.db")
+	file, _ := os.Create("test_update.db")
 	defer file.Close()
-	db, _ := data.ConnectionDB("sqlite3", "test.db")
+	db, _ := data.ConnectionDB("sqlite3", "test_update.db")
 	defer db.Close()
 	db.Exec(`CREATE TABLE users (
 		id VARCHAR(200) UNIQUE,
@@ -27,7 +27,7 @@ func TestUpdateBalance(t *testing.T) {
 		ID:      "1234",
 		Balance: 2000,
 	}
-	db, _ := data.ConnectionDB("sqlite3", "test.db")
+	db, _ := data.ConnectionDB("sqlite3", "test_update.db")
 	r := repositories.NewUserRepository(db)
 	r.UpdateBalance("1234", 2000)
 	user, _ := r.FindUserByID("1234")
