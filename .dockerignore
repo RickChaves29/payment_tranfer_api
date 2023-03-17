@@ -1,0 +1,8 @@
+**/*_test.go
+**/*_mock.go
+test/
+mock/
+.git/
+.gitignore
+.env
+.env.*
