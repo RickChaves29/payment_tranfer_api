@@ -1,0 +1,6 @@
+*.test.go
+*.mock.go
+test/
+mock/
+.git/
+.gitignore
