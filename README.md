@@ -66,4 +66,44 @@
 
 ## Criação da tabela no banco de daos
 
-> OBS: Caso não exista a tabela criada no banco de dados, a tabela é criada automaticamente pela aplicação
+> OBS: Caso não exista a tabela no banco de dados, a tabela é criada automaticamente pela aplicação
+
+## Rotas da API
+
+### GET - /api/v1/users/:id
+
+Retorna um json com base no id enviado na uri:
+
+```json
+{
+    "id": "0000",
+    "balance": 1000
+}
+```
+
+### GET - /api/v1/transfer
+
+Recebe um json:
+
+```json
+{
+    "payer": "0000",
+    "receive": "1111",
+    "amount": 0
+}
+```
+
+## Usuários para testar a API
+
+```json
+[
+    {
+        "id": "1234",
+        "balance": 1000
+    }
+    {
+        "id": "4321",
+        "balance": 2000
+    }
+]
+```
