@@ -2,26 +2,20 @@ package usecases
 
 import "errors"
 
-type User struct {
-	ID      string
-	Balance int64
-}
-type IUserRepository interface {
-	FindUserByID(id string) (*User, error)
-	UpdateBalance(id string, amount int64) error
-}
 type UserUsecase struct {
-	repo IUserRepository
+	userRepo     IUserRepository
+	transferRepo ITranferRepository
 }
 
-func NewUserUsecase(r IUserRepository) *UserUsecase {
+func NewUserUsecase(ur IUserRepository, tr ITranferRepository) *UserUsecase {
 	return &UserUsecase{
-		repo: r,
+		userRepo:     ur,
+		transferRepo: tr,
 	}
 }
 
 func (uc *UserUsecase) GetUser(id string) (*User, error) {
-	user, err := uc.repo.FindUserByID(id)
+	user, err := uc.userRepo.FindUserByID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -29,7 +23,7 @@ func (uc *UserUsecase) GetUser(id string) (*User, error) {
 }
 
 func (uc *UserUsecase) TransferPayment(payer, receive string, amount int64) error {
-	userPayer, err := uc.repo.FindUserByID(payer)
+	userPayer, err := uc.userRepo.FindUserByID(payer)
 	if err != nil {
 		return err
 	}
@@ -37,17 +31,25 @@ func (uc *UserUsecase) TransferPayment(payer, receive string, amount int64) erro
 		return errors.New("insufficient funds")
 	}
 
-	userReceive, err := uc.repo.FindUserByID(receive)
+	userReceive, err := uc.userRepo.FindUserByID(receive)
 	if err != nil {
 		return err
 	}
-	err = uc.repo.UpdateBalance(userPayer.ID, userPayer.Balance-amount)
+	err = uc.userRepo.UpdateBalance(userPayer.ID, userPayer.Balance-amount)
 	if err != nil {
 		return err
 	}
-	err = uc.repo.UpdateBalance(userReceive.ID, userReceive.Balance+amount)
+	err = uc.userRepo.UpdateBalance(userReceive.ID, userReceive.Balance+amount)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (uc *UserUsecase) GetAllTransfers(id string) ([]Transfer, error) {
+	transfers, err := uc.transferRepo.FindAllTransfersByUserID(id)
+	if err != nil {
+		return nil, err
+	}
+	return transfers, nil
 }
