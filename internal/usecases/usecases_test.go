@@ -15,7 +15,7 @@ func TestFunctionGetUser(t *testing.T) {
 		},
 	}
 	mr := mock_test.NewMockRepository(usersTest)
-	uc := usecases.NewUserUsecase(mr)
+	uc := usecases.NewUserUsecase(mr, nil)
 
 	t.Run("if user id is correct", func(t *testing.T) {
 		user, _ := uc.GetUser("1234")
@@ -65,7 +65,7 @@ func TestTransferPayment(t *testing.T) {
 		},
 	}
 	mr := mock_test.NewMockRepository(usersTest)
-	uc := usecases.NewUserUsecase(mr)
+	uc := usecases.NewUserUsecase(mr, nil)
 	t.Run("if update balance is ok", func(t *testing.T) {
 		uc.TransferPayment("1234", "4321", 200)
 		if usersTest[0].Balance != 900 && usersTest[1].Balance != 250 {
