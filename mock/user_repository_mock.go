@@ -3,20 +3,20 @@ package mock_test
 import (
 	"errors"
 
-	"github.com/RickChaves29/payment_tranfer_api/internal/usecases"
+	"github.com/RickChaves29/payment_tranfer_api/internal/domain/user"
 )
 
 type MockRepository struct {
-	users []usecases.User
+	users []user.User
 }
 
-func NewMockRepository(u []usecases.User) *MockRepository {
+func NewMockRepository(u []user.User) *MockRepository {
 	return &MockRepository{
 		users: u,
 	}
 }
-func (mr *MockRepository) FindUserByID(id string) (*usecases.User, error) {
-	var user *usecases.User
+func (mr *MockRepository) FindUserByID(id string) (*user.User, error) {
+	var user *user.User
 	if id == "" {
 		return nil, errors.New("id is empty")
 	}
@@ -33,7 +33,7 @@ func (mr *MockRepository) FindUserByID(id string) (*usecases.User, error) {
 	return user, nil
 }
 
-func (mr *MockRepository) UpdateBalance(id string, amount int64) (err error) {
+func (mr *MockRepository) UpdateBalance(id string, amount uint64) (err error) {
 	for i, data := range mr.users {
 		if id == data.ID {
 			mr.users[i].Balance = amount
