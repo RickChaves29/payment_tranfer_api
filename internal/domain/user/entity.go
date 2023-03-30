@@ -13,3 +13,9 @@ type CreateUserEntity struct {
 	Email    string
 	Password string
 }
+
+type UserTransferPaymentEntity struct {
+	Payer   string
+	Receive string
+	Amount  uint64
+}
