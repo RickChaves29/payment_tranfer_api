@@ -17,3 +17,11 @@ func (uc *TranferUsecase) CreateNewTransfer(userID uint64, data CreateTransfer) 
 	}
 	return nil
 }
+
+func (uc *TranferUsecase) ListAllTransfers(userId uint64) ([]TransferEntity, error) {
+	transfers, err := uc.transferRepo.FindAllTransfers(userId)
+	if err != nil {
+		return nil, err
+	}
+	return transfers, nil
+}
