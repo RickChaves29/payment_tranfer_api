@@ -25,7 +25,16 @@ func (r *userRepository) Save(data user.CreateUserEntity) error {
 func (r *userRepository) FindUserByEmail(email string) (*user.UserEntity, error) {
 	user := user.UserEntity{}
 	row := r.db.QueryRow(`SELECT * FROM users WHERE email = $1`, email)
-	err := row.Scan(&user.ID, &user.Balance)
+	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Balance)
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+func (r *userRepository) FindUserById(id uint64) (*user.UserEntity, error) {
+	user := user.UserEntity{}
+	row := r.db.QueryRow(`SELECT users.id, users.user_name, users.email, users.balance FROM users WHERE id = $1`, id)
+	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Balance)
 	if err != nil {
 		return nil, err
 	}
