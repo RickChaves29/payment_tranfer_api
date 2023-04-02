@@ -38,6 +38,17 @@ func (rt *UserRepoTest) FindUserByEmail(email string) (*user.UserEntity, error) 
 	return result, nil
 }
 
+func (rt *UserRepoTest) FindUserById(id uint64) (*user.UserEntity, error) {
+	var result *user.UserEntity
+	for _, user := range rt.repo {
+		if user.ID == id {
+			result = &user
+			break
+		}
+	}
+	return result, nil
+}
+
 func (rt *UserRepoTest) UpdateBalance(id uint64, amount uint64) error {
 	for i, user := range rt.repo {
 		if id == user.ID {
@@ -93,6 +104,40 @@ func TestIfReturnUser(t *testing.T) {
 	})
 	t.Run("should return user 2 success", func(t *testing.T) {
 		result, _ := uc.GetUserByEmail("any1@gmail.com")
+
+		if result.ID != 2 {
+			t.Errorf("have %v want %v", result.ID, 2)
+		}
+	})
+}
+
+func TestIfFindUserByIdReturnUser(t *testing.T) {
+	r := NewRepoTest([]user.UserEntity{
+		{
+			ID:       1,
+			Name:     "any",
+			Email:    "any@gmail.com",
+			Password: "1234",
+			Balance:  4000,
+		},
+		{
+			ID:       2,
+			Name:     "any 1",
+			Email:    "any1@gmail.com",
+			Password: "4321",
+			Balance:  5000,
+		},
+	})
+	uc := user.NewUserUsecase(r)
+	t.Run("should return user 1 success", func(t *testing.T) {
+		result, _ := uc.GetUserById(1)
+
+		if result.ID != 1 {
+			t.Errorf("have %v want %v", result.ID, 1)
+		}
+	})
+	t.Run("should return user 2 success", func(t *testing.T) {
+		result, _ := uc.GetUserById(2)
 
 		if result.ID != 2 {
 			t.Errorf("have %v want %v", result.ID, 2)
