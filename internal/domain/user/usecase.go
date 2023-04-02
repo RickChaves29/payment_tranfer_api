@@ -29,6 +29,13 @@ func (uc *UserUsecase) GetUserByEmail(email string) (*UserEntity, error) {
 	}
 	return user, nil
 }
+func (uc *UserUsecase) GetUserById(id uint64) (*UserEntity, error) {
+	user, err := uc.userRepo.FindUserById(id)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
 
 func (uc *UserUsecase) TransferPayment(data UserTransferPaymentEntity) error {
 	payer, err := uc.userRepo.FindUserByEmail(data.Payer)
